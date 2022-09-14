@@ -49,3 +49,5 @@ service.interceptors.response.use(response => {
 function checkTimeout() {
     return Date.now() - getTimeStamp() >= TimeOut
 }
+
+export default service
