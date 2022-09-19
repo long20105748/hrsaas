@@ -35,7 +35,7 @@ const actions = {
         const { staffPhoto } = await getUserDetailById(data.userId)
         const baseData = { staffPhoto, ...data }
         context.commit('setUserInfo', baseData)
-        console.log(baseData)
+            // console.log(baseData)
         return data
     },
     logout(context) {
