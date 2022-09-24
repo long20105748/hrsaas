@@ -16,8 +16,14 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import * as directives from '@/directives'
+import * as filters from '@/filters'
+import Components from '@/components'
+
 Object.keys(directives).forEach(key => {
     Vue.directive(key, directives[key]) // 循环注册自定义指令
+})
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key]) // 注册自定义过滤器
 })
 
 /**
@@ -37,7 +43,7 @@ Object.keys(directives).forEach(key => {
 Vue.use(ElementUI, { locale })
     // 如果想要中文版 element-ui，按如下方式声明
     // Vue.use(ElementUI)
-
+Vue.use(Components)
 Vue.config.productionTip = false
 
 new Vue({

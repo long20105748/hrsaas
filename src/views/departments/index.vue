@@ -67,6 +67,7 @@ export default {
   methods: {
     async loadDepartment() {
       const result = await getDepartment()
+      console.log(result)
       this.company.name = result.companyName
       this.departs = tranListToTreeDate(result.depts, '')
     },
