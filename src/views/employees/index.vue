@@ -12,6 +12,11 @@
       <!-- 放置表格和分页 -->
       <el-table v-loading="loading" border :data="list">
         <el-table-column label="序号" sortable="" type="index" />
+        <el-table-column width="120px" label="头像">
+          <template v-slot="{ row }">
+            <img v-imgerror="defaultImg" :src="row.staffPhoto" alt="" prop="staffPhoto" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px" @click="showQrCode(row.staffPhoto)">
+          </template>
+        </el-table-column>
         <el-table-column label="姓名" sortable="" prop="username" />
         <el-table-column label="工号" sortable="" prop="workNumber" />
         <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployment" />
@@ -48,7 +53,11 @@
     </div>
 
     <add-employees :show-dialog.sync="showDialog" />
-
+    <el-dialog :visible="qrCodeDialog" title="二维码">
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -57,6 +66,7 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeesEnum from '@/api/constant/employees' // 引入员工枚举对象
 import AddEmployees from './components/add-employees.vue'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 
 export default {
   components: {
@@ -69,7 +79,9 @@ export default {
       size: 5,
       total: 0,
       loading: false,
-      showDialog: false // 显示弹层
+      showDialog: false, // 显示弹层
+      qrCodeDialog: false,
+      defaultImg: require('@/assets/common/head.jpg')
     }
   },
   created() {
@@ -160,6 +172,13 @@ export default {
           }
           return item[header[key]]
         })
+      })
+    },
+    showQrCode(staffPhoto) {
+      if (!staffPhoto.trim()) return this.$message.warning('该用户未上传头像')
+      this.qrCodeDialog = true
+      this.$nextTick(() => {
+        QrCode.toCanvas(this.$refs.myCanvas, staffPhoto)
       })
     }
   }

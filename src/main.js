@@ -18,6 +18,9 @@ import '@/permission' // permission control
 import * as directives from '@/directives'
 import * as filters from '@/filters'
 import Components from '@/components'
+import Print from 'vue-print-nb'
+
+Vue.use(Print)
 
 Object.keys(directives).forEach(key => {
     Vue.directive(key, directives[key]) // 循环注册自定义指令

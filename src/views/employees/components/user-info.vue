@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <image-upload ref="staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +90,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <image-upload ref="employessPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -364,17 +365,38 @@ export default {
   methods: {
     async getUserDetailById(id) {
       this.userInfo = await getUserDetailById(id)
-      console.log(this.userInfo)
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        this.$refs.staffPhoto.fileList = [{
+          url: this.userInfo.staffPhoto,
+          upload: true
+        }]
+      }
     },
     async getPersonalDetail(id) {
       this.formData = await getPersonalDetail(id)
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        this.$refs.employessPhoto.fileList = [{
+          url: this.formData.staffPhoto,
+          upload: true
+        }]
+      }
     },
     async saveUser() {
-      await saveUserDetailById(this.userInfo)
+      const fileList = this.$refs.staffPhoto.fileList
+      if (fileList.some(item => !item.upload)) {
+        this.$message.warning('图片还未上传完成')
+        return
+      }
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存用户信息成功')
     },
     async savePersonal() {
-      await updatePersonal(this.formData)
+      const fileList = this.$refs.employessPhoto.fileList
+      if (fileList.some(item => !item.upload)) {
+        this.$message.warning('图片还未上传完成')
+        return
+      }
+      await updatePersonal({ ...this.formData, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存用户基本信息成功')
     }
   }
