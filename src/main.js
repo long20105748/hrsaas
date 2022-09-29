@@ -20,7 +20,12 @@ import * as filters from '@/filters'
 import Components from '@/components'
 import Print from 'vue-print-nb'
 
+// 混入
+import checkPermission from '@/mixin/checkPermission'
+
 Vue.use(Print)
+    // 全局混入
+Vue.mixin(checkPermission)
 
 Object.keys(directives).forEach(key => {
     Vue.directive(key, directives[key]) // 循环注册自定义指令

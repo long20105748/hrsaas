@@ -3,8 +3,8 @@ import Layout from '@/layout'
 // 员工的路由规则
 export default {
     // 路由规则
-    path: '/setting',
-    name: 'setting',
+    path: '/settings',
+    name: 'settings',
     component: Layout,
     children: [{
         path: '', // 默认路由

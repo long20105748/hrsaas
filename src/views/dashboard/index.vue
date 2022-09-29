@@ -6,6 +6,7 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -14,6 +15,9 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  created() {
+    alert(0)
   }
 }
 </script>

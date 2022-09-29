@@ -102,3 +102,14 @@ export function updateJob(data) {
         data
     })
 }
+
+/**
+ * 给员工分配角色
+ * ****/
+export function assignRoles(data) {
+    return request({
+        url: `/sys/role/assignPrem`,
+        method: 'PUT',
+        data
+    })
+}

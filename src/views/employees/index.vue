@@ -6,7 +6,7 @@
         <template #after>
           <el-button type="success" size="small" @click="$router.push('/import')">excel导入</el-button>
           <el-button type="danger" size="small" @click="exportData">excel导出</el-button>
-          <el-button type="primary" size="small" @click="showDialog = true">新增员工</el-button>
+          <el-button type="primary" size="small" :disabled="!checkPermission('aa')" @click="showDialog = true">新增员工</el-button>
         </template>
       </page-tools>
       <!-- 放置表格和分页 -->
@@ -41,7 +41,7 @@
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
             <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -58,6 +58,7 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <assign-role ref="AssignRole" :show-role-dialog.sync="showRoleDialog" :user-id="userId" />
   </div>
 </template>
 
@@ -67,21 +68,25 @@ import EmployeesEnum from '@/api/constant/employees' // 引入员工枚举对象
 import AddEmployees from './components/add-employees.vue'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
+import AssignRole from './components/assign-role.vue'
 
 export default {
   components: {
-    AddEmployees
+    AddEmployees,
+    AssignRole
   },
   data() {
     return {
+      showRoleDialog: false, // 角色分配
       list: [],
       page: 1,
       size: 5,
       total: 0,
       loading: false,
       showDialog: false, // 显示弹层
-      qrCodeDialog: false,
-      defaultImg: require('@/assets/common/head.jpg')
+      qrCodeDialog: false, // 显示二维码
+      defaultImg: require('@/assets/common/head.jpg'),
+      userId: null // 用户ID
     }
   },
   created() {
@@ -180,6 +185,13 @@ export default {
       this.$nextTick(() => {
         QrCode.toCanvas(this.$refs.myCanvas, staffPhoto)
       })
+    },
+    // 编辑角色
+    async editRole(id) {
+      // props传值是异步的
+      this.userId = id
+      await this.$refs.AssignRole.getUserDetailById(this.userId)
+      this.showRoleDialog = true
     }
   }
 }
